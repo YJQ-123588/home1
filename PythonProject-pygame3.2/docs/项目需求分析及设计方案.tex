@@ -1,0 +1,536 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage[UTF8]{ctex}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{amsmath}
+\usepackage{hyperref}
+\usepackage{caption}
+\usepackage{setspace}
+
+% 页面设置
+\geometry{top=2.5cm,bottom=2.5cm,left=2.5cm,right=2.5cm,headheight=1.5cm,footskip=1.5cm}
+
+% 1.5倍行距
+\onehalfspacing
+
+% 页眉页脚设置
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[C]{\small 软件项目开发与实践 --- 项目需求分析及设计方案}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% 标题格式设置
+\titleformat{\section}{\centering\zihao{-2}\heiti}{第\,\thesection\,章\quad}{0.5em}{}
+\titleformat{\subsection}{\zihao{3}\heiti}{\thesubsection\quad}{0.5em}{}
+\titleformat{\subsubsection}{\zihao{-3}\heiti}{\thesubsubsection\quad}{0.5em}{}
+
+% 表格标题格式
+\captionsetup{font=small,labelfont=bf,labelsep=quad}
+\captionsetup[longtable]{font=small,labelfont=bf,labelsep=quad}
+
+% 自定义三线表命令
+\newcommand{\thead}[1]{\multirow{2}{*}{\textbf{#1}}}
+
+\begin{document}
+
+% ======================== 封面 ========================
+\begin{titlepage}
+\begin{center}
+\vspace*{1.5cm}
+
+{\zihao{1}\heiti 软件项目开发与实践}\\[0.8cm]
+{\zihao{1}\heiti 项目需求分析及设计方案}\\[2cm]
+
+{\zihao{2}\heiti 基于Pygame的2D RPG游戏设计与实现}\\[0.3cm]
+{\zihao{3}\heiti ——以《西游记：祸起观音院》为例}\\[3cm]
+
+\renewcommand{\arraystretch}{2.0}
+\begin{tabular}{r@{\hspace{0.5em}：\hspace{0.5em}}l}
+{\zihao{4}\songti 班\quad\quad 级} & {\zihao{4}\songti \underline{\makebox[120pt]{软件2401}}} \\
+{\zihao{4}\songti 学\quad\quad 号} & {\zihao{4}\songti \underline{\makebox[120pt]{5120243335}}} \\
+{\zihao{4}\songti 姓\quad\quad 名} & {\zihao{4}\songti \underline{\makebox[120pt]{袁杰强}}} \\
+{\zihao{4}\songti 讨论日期} & {\zihao{4}\songti \underline{\makebox[120pt]{2026年6月24日}}} \\
+{\zihao{4}\songti 讨论时间} & {\zihao{4}\songti \underline{\makebox[120pt]{30min}}} \\
+\end{tabular}
+
+\vfill
+{\zihao{4}\songti \today}
+\end{center}
+\end{titlepage}
+
+% ======================== 目录 ========================
+\newpage
+\tableofcontents
+\thispagestyle{empty}
+\addtocontents{toc}{\protect\thispagestyle{empty}}
+
+% ======================== 正文 ========================
+\newpage
+\setcounter{page}{1}
+
+% ========== 第一章 ==========
+\section{项目背景与目标}
+
+\subsection{项目背景}
+《西游记：祸起观音院》是一款基于Pygame开发的2D RPG冒险游戏，以中国古典名著《西游记》中"祸起观音院"为故事背景。玩家将扮演孙悟空，体验经典的西游记故事情节，在村庄和寺庙场景中探索、与NPC互动、进行回合制战斗，最终降服观音院妖怪。
+
+\subsection{当前存在的问题}
+\begin{enumerate}[label=(\arabic*)]
+    \item 传统RPG游戏多为商业产品，缺乏开源学习项目；
+    \item 学生在学习游戏开发时缺少完整的项目参考；
+    \item 需要一个融合中国传统文化元素的教学案例。
+\end{enumerate}
+
+\subsection{真实使用场景}
+\begin{enumerate}[label=(\arabic*)]
+    \item 软件工程课程的教学实践项目；
+    \item 游戏开发初学者的学习参考；
+    \item 中国传统文化数字化传播的示例。
+\end{enumerate}
+
+\subsection{项目目标}
+
+\subsubsection{功能性目标}
+\begin{enumerate}[label=(\arabic*)]
+    \item 实现完整的2D RPG游戏框架，包含开始界面、村庄场景、寺庙场景；
+    \item 实现回合制战斗系统，支持普通攻击、技能攻击、大招三种攻击方式；
+    \item 实现NPC对话系统和剧情推进机制；
+    \item 实现角色属性系统（生命值、攻击力等）；
+    \item 实现地图碰撞检测和场景切换功能。
+\end{enumerate}
+
+\subsubsection{非功能性目标}
+\begin{enumerate}[label=(\arabic*)]
+    \item 性能：游戏运行流畅，帧率稳定在30FPS以上；
+    \item 可用性：操作简单直观，新手易于上手；
+    \item 可维护性：代码结构清晰，模块化设计，便于扩展；
+    \item 兼容性：支持Windows操作系统，Python 3.6+环境。
+\end{enumerate}
+
+% ========== 第二章 ==========
+\section{功能需求分析}
+
+\subsection{游戏启动与主菜单功能}
+
+\subsubsection{功能描述}
+玩家启动游戏后显示主菜单，包含"开始游戏"、"游戏介绍"、"退出游戏"三个选项。
+
+\subsubsection{操作说明}
+\begin{itemize}[leftmargin=2em]
+    \item 按回车键或空格键：开始游戏；
+    \item 点击"开始游戏"按钮：开始游戏；
+    \item 点击"游戏介绍"按钮：显示游戏介绍界面；
+    \item 点击"退出游戏"按钮：退出游戏；
+    \item 按ESC键：退出游戏。
+\end{itemize}
+
+\subsubsection{测试用例}
+\begin{longtable}{p{1.2cm} p{2.8cm} p{4cm} p{3.5cm} p{1.5cm}}
+\toprule
+\textbf{编号} & \textbf{测试项} & \textbf{测试步骤} & \textbf{预期结果} & \textbf{结果} \\
+\midrule
+\endhead
+TC001 & 游戏启动 & 双击main.py运行游戏 & 游戏窗口正常显示，显示开始界面 & 成功 \\
+TC002 & 回车键开始 & 按回车键 & 进入村庄场景 & 成功 \\
+TC003 & 空格键开始 & 按空格键 & 进入村庄场景 & 成功 \\
+TC004 & 点击开始按钮 & 点击"开始游戏"按钮 & 进入村庄场景 & 成功 \\
+TC005 & 点击退出按钮 & 点击"退出游戏"按钮 & 游戏正常退出 & 成功 \\
+TC006 & ESC键退出 & 按ESC键 & 游戏正常退出 & 成功 \\
+TC007 & 游戏介绍显示 & 点击"游戏介绍"按钮 & 显示游戏介绍界面 & 成功 \\
+TC008 & 介绍返回 & 在介绍界面按空格键 & 返回主菜单 & 成功 \\
+\bottomrule
+\end{longtable}
+
+\subsection{角色移动控制功能}
+
+\subsubsection{功能描述}
+玩家使用方向键控制孙悟空在地图上移动，按住Shift键可加速移动。
+
+\subsubsection{操作说明}
+\begin{itemize}[leftmargin=2em]
+    \item 方向键↑：向上移动；
+    \item 方向键↓：向下移动；
+    \item 方向键←：向左移动；
+    \item 方向键→：向右移动；
+    \item Shift键（左/右）：加速移动（移动速度$\times$2）；
+    \item 松开方向键：停止移动。
+\end{itemize}
+
+\subsubsection{测试用例}
+\begin{longtable}{p{1.2cm} p{2.8cm} p{4cm} p{3.5cm} p{1.5cm}}
+\toprule
+\textbf{编号} & \textbf{测试项} & \textbf{测试步骤} & \textbf{预期结果} & \textbf{结果} \\
+\midrule
+\endhead
+TC009 & 向上移动 & 按方向键↑ & 角色向上移动，播放向上行走动画 & 成功 \\
+TC010 & 向下移动 & 按方向键↓ & 角色向下移动，播放向下行走动画 & 成功 \\
+TC011 & 向左移动 & 按方向键← & 角色向左移动，播放向左行走动画 & 成功 \\
+TC012 & 向右移动 & 按方向键→ & 角色向右移动，播放向右行走动画 & 成功 \\
+TC013 & 加速移动 & 按住Shift键移动 & 角色移动速度加倍 & 成功 \\
+TC014 & 停止移动 & 松开方向键 & 角色停止移动，播放站立动画 & 成功 \\
+TC015 & 边界检测 & 移动到地图边界 & 角色无法超出地图边界 & 成功 \\
+TC016 & 障碍物碰撞 & 移动到障碍物位置 & 角色无法穿过障碍物 & 成功 \\
+TC017 & 动画播放 & 移动时观察角色动画 & 角色播放对应方向行走动画 & 成功 \\
+\bottomrule
+\end{longtable}
+
+\subsection{场景探索与切换功能}
+
+\subsubsection{功能描述}
+玩家可在村庄和寺庙两个场景中自由探索，通过特定方式触发场景切换。
+
+\subsubsection{操作说明}
+\begin{itemize}[leftmargin=2em]
+    \item 村庄场景：与土地公对话后选择"前往寺庙"；
+    \item 寺庙场景：按ESC键选择"返回村庄"；
+    \item 场景切换时有渐入渐出过渡效果。
+\end{itemize}
+
+\subsubsection{测试用例}
+\begin{longtable}{p{1.2cm} p{2.8cm} p{4cm} p{3.5cm} p{1.5cm}}
+\toprule
+\textbf{编号} & \textbf{测试项} & \textbf{测试步骤} & \textbf{预期结果} & \textbf{结果} \\
+\midrule
+\endhead
+TC018 & 村庄到寺庙 & 与土地公对话后确认前往 & 场景渐出后进入寺庙场景 & 成功 \\
+TC019 & 寺庙返回村庄 & 在寺庙按ESC键确认返回 & 场景渐出后返回村庄场景 & 成功 \\
+TC020 & 场景过渡效果 & 场景切换时观察画面 & 渐入渐出效果正常显示 & 成功 \\
+TC021 & 玩家位置保持 & 场景切换后 & 玩家在新场景中正常显示 & 成功 \\
+\bottomrule
+\end{longtable}
+
+\subsection{NPC对话系统功能}
+
+\subsubsection{功能描述}
+玩家靠近NPC后可触发对话，对话框显示NPC台词，玩家按空格键继续下一句对话。
+
+\subsubsection{操作说明}
+\begin{itemize}[leftmargin=2em]
+    \item 靠近NPC后按空格键：触发对话；
+    \item 靠近NPC后按回车键：触发对话；
+    \item 对话过程中按空格键：继续下一句对话；
+    \item 对话过程中按回车键：继续下一句对话；
+    \item 对话过程中按ESC键：关闭对话框。
+\end{itemize}
+
+\subsubsection{测试用例}
+\begin{longtable}{p{1.2cm} p{2.8cm} p{4cm} p{3.5cm} p{1.5cm}}
+\toprule
+\textbf{编号} & \textbf{测试项} & \textbf{测试步骤} & \textbf{预期结果} & \textbf{结果} \\
+\midrule
+\endhead
+TC022 & 土地公对话 & 靠近土地公按空格键 & 显示对话框，展示对话内容 & 成功 \\
+TC023 & 长老对话 & 靠近长老按空格键 & 显示对话框，展示对话内容 & 成功 \\
+TC024 & 农民对话 & 靠近农民按空格键 & 显示对话框，展示对话内容 & 成功 \\
+TC025 & 对话继续 & 对话中按空格键 & 显示下一句对话 & 成功 \\
+TC026 & 对话关闭 & 对话中按ESC键 & 对话框关闭 & 成功 \\
+TC027 & 对话完成 & 显示完所有对话后 & 对话框自动关闭 & 成功 \\
+TC028 & 对话冷却 & 连续与同一NPC对话 & 存在冷却时间，无法连续对话 & 成功 \\
+\bottomrule
+\end{longtable}
+
+\subsection{回合制战斗系统功能}
+
+\subsubsection{功能描述}
+玩家遭遇敌人时进入回合制战斗界面，战斗界面显示玩家和怪物的血条、名称。
+
+\subsubsection{操作说明}
+\begin{itemize}[leftmargin=2em]
+    \item 靠近怪物后弹出选择框：选择"战斗"进入战斗，选择"避战"扣除HP；
+    \item 战斗中按数字键1：执行普通攻击；
+    \item 战斗中按数字键2：执行技能攻击；
+    \item 战斗中按数字键3：执行大招攻击（需解锁）；
+    \item 点击攻击按钮：执行对应攻击；
+    \item 战斗胜利/失败后按空格键：返回场景。
+\end{itemize}
+
+\subsubsection{测试用例}
+\begin{longtable}{p{1.2cm} p{2.8cm} p{4cm} p{3.5cm} p{1.5cm}}
+\toprule
+\textbf{编号} & \textbf{测试项} & \textbf{测试步骤} & \textbf{预期结果} & \textbf{结果} \\
+\midrule
+\endhead
+TC029 & 怪物遭遇 & 靠近牛妖 & 弹出避战选择框 & 成功 \\
+TC030 & 选择战斗 & 在选择框选择"战斗" & 进入回合制战斗场景 & 成功 \\
+TC031 & 选择避战 & 在选择框选择"避战" & 扣除20HP，返回场景 & 成功 \\
+TC032 & 战斗界面显示 & 进入战斗场景 & 显示玩家和怪物血条、名称 & 成功 \\
+TC033 & 战斗音乐 & 进入战斗场景 & 播放战斗背景音乐 & 成功 \\
+\bottomrule
+\end{longtable}
+
+\subsection{普通攻击功能}
+
+\subsubsection{功能描述}
+战斗中执行普通攻击，对怪物造成基础伤害。
+
+\subsubsection{操作说明}
+\begin{itemize}[leftmargin=2em]
+    \item 按数字键1：执行普通攻击；
+    \item 点击"普攻"按钮：执行普通攻击。
+\end{itemize}
+
+\subsubsection{测试用例}
+\begin{longtable}{p{1.2cm} p{2.8cm} p{4cm} p{3.5cm} p{1.5cm}}
+\toprule
+\textbf{编号} & \textbf{测试项} & \textbf{测试步骤} & \textbf{预期结果} & \textbf{结果} \\
+\midrule
+\endhead
+TC034 & 数字键1攻击 & 按数字键1 & 对怪物造成25点伤害 & 成功 \\
+TC035 & 点击普攻按钮 & 点击"普攻"按钮 & 对怪物造成25点伤害 & 成功 \\
+TC036 & 攻击动画 & 执行普通攻击 & 播放玩家攻击动画 & 成功 \\
+TC037 & 攻击音效 & 执行普通攻击 & 播放攻击音效 & 成功 \\
+TC038 & 怪物受伤 & 攻击后 & 怪物血条减少，显示受伤动画 & 成功 \\
+\bottomrule
+\end{longtable}
+
+\subsection{技能攻击功能}
+
+\subsubsection{功能描述}
+战斗中执行技能攻击，对怪物造成额外伤害。
+
+\subsubsection{操作说明}
+\begin{itemize}[leftmargin=2em]
+    \item 按数字键2：执行技能攻击；
+    \item 点击"金箍棒"按钮：执行技能攻击。
+\end{itemize}
+
+\subsubsection{测试用例}
+\begin{longtable}{p{1.2cm} p{2.8cm} p{4cm} p{3.5cm} p{1.5cm}}
+\toprule
+\textbf{编号} & \textbf{测试项} & \textbf{测试步骤} & \textbf{预期结果} & \textbf{结果} \\
+\midrule
+\endhead
+TC039 & 数字键2攻击 & 按数字键2 & 对怪物造成60点伤害 & 成功 \\
+TC040 & 点击金箍棒按钮 & 点击"金箍棒"按钮 & 对怪物造成60点伤害 & 成功 \\
+TC041 & 技能动画 & 执行技能攻击 & 播放技能特效动画 & 成功 \\
+TC042 & 技能音效 & 执行技能攻击 & 播放技能音效 & 成功 \\
+\bottomrule
+\end{longtable}
+
+\subsection{大招攻击功能}
+
+\subsubsection{功能描述}
+战斗中执行大招攻击，对怪物造成大量伤害，需要先解锁才能使用。
+
+\subsubsection{操作说明}
+\begin{itemize}[leftmargin=2em]
+    \item 按数字键3：执行大招攻击（需解锁）；
+    \item 点击"七十二变"按钮：执行大招攻击（需解锁）。
+\end{itemize}
+
+\subsubsection{测试用例}
+\begin{longtable}{p{1.2cm} p{2.8cm} p{4cm} p{3.5cm} p{1.5cm}}
+\toprule
+\textbf{编号} & \textbf{测试项} & \textbf{测试步骤} & \textbf{预期结果} & \textbf{结果} \\
+\midrule
+\endhead
+TC043 & 数字键3攻击 & 按数字键3（已解锁） & 对怪物造成100点伤害 & 成功 \\
+TC044 & 点击七十二变按钮 & 点击"七十二变"按钮（已解锁） & 对怪物造成100点伤害 & 成功 \\
+TC045 & 大招动画 & 执行大招攻击 & 播放大招全屏特效 & 成功 \\
+TC046 & 大招音效 & 执行大招攻击 & 播放大招音效 & 成功 \\
+TC047 & 未解锁大招 & 未解锁时按数字键3 & 无法执行大招攻击 & 成功 \\
+\bottomrule
+\end{longtable}
+
+\subsection{角色属性系统功能}
+
+\subsubsection{功能描述}
+玩家角色具有生命值（HP）和攻击力属性，生命值初始为100点。
+
+\subsubsection{属性说明}
+\begin{itemize}[leftmargin=2em]
+    \item 初始生命值：100点；
+    \item 初始攻击力：25点；
+    \item 长老1增益：HP上限+50，HP+50；
+    \item 长老3增益：HP完全恢复。
+\end{itemize}
+
+\subsubsection{测试用例}
+\begin{longtable}{p{1.2cm} p{2.8cm} p{4cm} p{3.5cm} p{1.5cm}}
+\toprule
+\textbf{编号} & \textbf{测试项} & \textbf{测试步骤} & \textbf{预期结果} & \textbf{结果} \\
+\midrule
+\endhead
+TC048 & 初始HP & 游戏开始 & 玩家HP为100点 & 成功 \\
+TC049 & 受伤减少HP & 被怪物攻击 & HP减少怪物攻击力数值 & 成功 \\
+TC050 & HP为0失败 & HP降为0 & 战斗失败 & 成功 \\
+TC051 & 长老1增益 & 与长老1对话 & HP上限+50，HP+50 & 成功 \\
+TC052 & 长老3增益 & 与长老3对话 & HP完全恢复 & 成功 \\
+\bottomrule
+\end{longtable}
+
+\subsection{怪物系统功能}
+
+\subsubsection{功能描述}
+游戏包含普通怪物和BOSS两种类型，击败所有怪物后游戏通关。
+
+\subsubsection{怪物属性}
+\begin{itemize}[leftmargin=2em]
+    \item 普通怪物（牛妖）：生命值100点，攻击力15点；
+    \item BOSS（牛魔王）：生命值250点，攻击力30点。
+\end{itemize}
+
+\subsubsection{测试用例}
+\begin{longtable}{p{1.2cm} p{2.8cm} p{4cm} p{3.5cm} p{1.5cm}}
+\toprule
+\textbf{编号} & \textbf{测试项} & \textbf{测试步骤} & \textbf{预期结果} & \textbf{结果} \\
+\midrule
+\endhead
+TC053 & 普通怪物HP & 遭遇普通怪物 & 怪物HP为100点 & 成功 \\
+TC054 & BOSS HP & 遭遇BOSS & 怪物HP为250点 & 成功 \\
+TC055 & 击败普通怪物 & 使普通怪物HP为0 & 战斗胜利，怪物消失 & 成功 \\
+TC056 & 击败BOSS & 使BOSS HP为0 & 战斗胜利，显示通关画面 & 成功 \\
+\bottomrule
+\end{longtable}
+
+\subsection{碰撞检测系统功能}
+
+\subsubsection{功能描述}
+玩家移动时检测与地图障碍物的碰撞，防止穿墙。
+
+\subsubsection{测试用例}
+\begin{longtable}{p{1.2cm} p{2.8cm} p{4cm} p{3.5cm} p{1.5cm}}
+\toprule
+\textbf{编号} & \textbf{测试项} & \textbf{测试步骤} & \textbf{预期结果} & \textbf{结果} \\
+\midrule
+\endhead
+TC057 & 墙壁碰撞 & 移动到墙壁位置 & 角色无法穿过墙壁 & 成功 \\
+TC058 & 树木碰撞 & 移动到树木位置 & 角色无法穿过树木 & 成功 \\
+TC059 & 建筑碰撞 & 移动到建筑位置 & 角色无法穿过建筑 & 成功 \\
+TC060 & 滑动碰撞 & 沿障碍物边缘移动 & 角色可沿障碍物边缘滑动 & 成功 \\
+\bottomrule
+\end{longtable}
+
+\subsection{音效与背景音乐功能}
+
+\subsubsection{功能描述}
+游戏不同场景播放不同背景音乐，攻击时播放对应音效。
+
+\subsubsection{音频说明}
+\begin{itemize}[leftmargin=2em]
+    \item 村庄背景音乐：nmw.mp3；
+    \item 寺庙/战斗背景音乐：aigei.mp3；
+    \item 攻击音效：swk.wav。
+\end{itemize}
+
+\subsubsection{测试用例}
+\begin{longtable}{p{1.2cm} p{2.8cm} p{4cm} p{3.5cm} p{1.5cm}}
+\toprule
+\textbf{编号} & \textbf{测试项} & \textbf{测试步骤} & \textbf{预期结果} & \textbf{结果} \\
+\midrule
+\endhead
+TC061 & 村庄音乐 & 进入村庄场景 & 播放村庄背景音乐 & 成功 \\
+TC062 & 寺庙音乐 & 进入寺庙场景 & 播放寺庙背景音乐 & 成功 \\
+TC063 & 战斗音乐 & 进入战斗场景 & 播放战斗背景音乐 & 成功 \\
+TC064 & 普攻音效 & 执行普通攻击 & 播放攻击音效 & 成功 \\
+TC065 & 技能音效 & 执行技能攻击 & 播放技能音效 & 成功 \\
+TC066 & 大招音效 & 执行大招攻击 & 播放大招音效 & 成功 \\
+\bottomrule
+\end{longtable}
+
+\subsection{游戏胜利与失败功能}
+
+\subsubsection{功能描述}
+击败BOSS后显示胜利画面，玩家生命值为0时显示失败画面。
+
+\subsubsection{测试用例}
+\begin{longtable}{p{1.2cm} p{2.8cm} p{4cm} p{3.5cm} p{1.5cm}}
+\toprule
+\textbf{编号} & \textbf{测试项} & \textbf{测试步骤} & \textbf{预期结果} & \textbf{结果} \\
+\midrule
+\endhead
+TC067 & 战斗胜利 & 击败BOSS & 显示胜利画面 & 成功 \\
+TC068 & 胜利继续 & 胜利后按空格键 & 返回场景，显示通关信息 & 成功 \\
+TC069 & 战斗失败 & 玩家HP为0 & 显示失败画面 & 成功 \\
+TC070 & 失败继续 & 失败后按空格键 & 土地公救援，返回村庄 & 成功 \\
+\bottomrule
+\end{longtable}
+
+% ========== 第三章 ==========
+\section{技术方案设计}
+
+\subsection{技术选型}
+
+\begin{table}[htbp]
+\centering
+\caption{技术选型表}
+\begin{tabular}{lll}
+\toprule
+\textbf{层级} & \textbf{技术选型} & \textbf{说明} \\
+\midrule
+编程语言 & Python 3.6+ & 语法简洁，适合教学和快速开发 \\
+游戏引擎 & Pygame 2.0+ & 成熟的2D游戏开发库 \\
+地图编辑 & Tiled + pytmx & 使用Tiled编辑器制作地图 \\
+版本控制 & Git & 代码版本管理 \\
+开发工具 & PyCharm & 专业的Python IDE \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{系统架构设计}
+系统采用分层架构设计：
+\begin{enumerate}[label=(\arabic*)]
+    \item 配置层（config）：负责全局常量、游戏参数、资源路径等配置管理；
+    \item 核心层（core）：提供游戏引擎核心功能，包括主控类、动画系统、地图系统；
+    \item 场景层（scenes）：实现各个游戏场景的逻辑和渲染；
+    \item 角色层（characters）：管理玩家角色和NPC的行为和属性；
+    \item 界面层（ui）：提供各种用户界面组件。
+\end{enumerate}
+
+\subsection{核心业务流程}
+游戏启动 $\rightarrow$ 显示主菜单 $\rightarrow$ 玩家选择"开始游戏" $\rightarrow$ 进入村庄场景
+
+$\downarrow$
+
+玩家与NPC对话了解剧情 $\rightarrow$ 前往寺庙场景 $\rightarrow$ 遭遇怪物进入战斗
+
+$\downarrow$
+
+回合制战斗（玩家攻击 $\rightarrow$ 怪物反击）$\rightarrow$ 击败怪物 $\rightarrow$ 继续探索
+
+$\downarrow$
+
+击败BOSS $\rightarrow$ 显示胜利画面 $\rightarrow$ 游戏通关
+
+% ========== 第四章 ==========
+\section{主要难点与解决方案}
+
+\subsection{地图碰撞检测}
+\textbf{难点：}玩家移动时需要检测与地图障碍物的碰撞，避免穿墙。
+
+\textbf{解决方案：}使用矩形碰撞检测算法，将障碍物存储为矩形列表，逐帧检测玩家位置与障碍物的重叠。
+
+\subsection{回合制战斗状态管理}
+\textbf{难点：}战斗系统涉及多个状态（玩家攻击、怪物攻击、动画播放等），状态转换逻辑复杂。
+
+\textbf{解决方案：}采用有限状态机模式，定义清晰的状态和转换条件，使用状态计时器控制状态持续时间。
+
+\subsection{动画系统设计}
+\textbf{难点：}需要支持角色行走动画、攻击动画、死亡动画等多种动画类型。
+
+\textbf{解决方案：}设计统一的Animation类，支持帧序列管理、播放速度控制、动画切换。
+
+\subsection{场景切换与数据传递}
+\textbf{难点：}不同场景间需要传递玩家属性（HP、攻击力等），切换时保持游戏状态。
+
+\textbf{解决方案：}采用场景管理器模式，场景切换时传递玩家数据字典，确保状态连续性。
+
+% ========== 第五章 ==========
+\section{结论}
+
+本次讨论明确了《西游记：祸起观音院》项目的需求分析和设计方案。项目采用Pygame作为开发引擎，Python作为编程语言，实现一款具有中国特色的2D RPG游戏。
+
+主要功能包括：游戏启动与主菜单、角色移动控制、场景探索与切换、NPC对话系统、回合制战斗系统、普通攻击、技能攻击、大招攻击、角色属性系统、怪物系统、碰撞检测系统、音效与背景音乐、游戏胜利与失败等14个功能模块，每个功能模块都有详细的操作说明和测试用例。
+
+技术难点集中在碰撞检测、状态管理、动画系统、场景切换等方面，均有成熟的解决方案。
+
+\end{document}

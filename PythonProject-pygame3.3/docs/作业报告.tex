@@ -1,0 +1,261 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage[UTF8]{ctex}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{amsmath}
+\usepackage{hyperref}
+\usepackage{caption}
+\usepackage{setspace}
+
+% 页面设置
+\geometry{top=2.5cm,bottom=2.5cm,left=2.5cm,right=2.5cm,headheight=1.5cm,footskip=1.5cm}
+
+% 1.5倍行距
+\onehalfspacing
+
+% 页眉页脚设置
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[C]{\small 软件项目开发与实践 --- 作业2}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% 标题格式设置
+\titleformat{\section}{\centering\zihao{-2}\heiti}{第\,\thesection\,章\quad}{0.5em}{}
+\titleformat{\subsection}{\zihao{3}\heiti}{\thesubsection\quad}{0.5em}{}
+\titleformat{\subsubsection}{\zihao{-3}\heiti}{\thesubsubsection\quad}{0.5em}{}
+
+% 表格标题格式
+\captionsetup{font=small,labelfont=bf,labelsep=quad}
+\captionsetup[longtable]{font=small,labelfont=bf,labelsep=quad}
+
+% 自定义三线表命令
+\newcommand{\thead}[1]{\multirow{2}{*}{\textbf{#1}}}
+
+\begin{document}
+
+% ======================== 封面 ========================
+\begin{titlepage}
+\begin{center}
+\vspace*{1.5cm}
+
+{\zihao{1}\heiti 软件项目开发与实践}\\[0.8cm]
+{\zihao{1}\heiti 作业2}\\[2cm]
+
+{\zihao{2}\heiti 基于Pygame的2D RPG游戏设计与实现}\\[0.3cm]
+{\zihao{3}\heiti ——以《西游记：祸起观音院》为例}\\[3cm]
+
+\renewcommand{\arraystretch}{2.0}
+\begin{tabular}{r@{\hspace{0.5em}：\hspace{0.5em}}l}
+{\zihao{4}\songti 班\quad\quad 级} & {\zihao{4}\songti \underline{\makebox[120pt]{软件2401}}} \\
+{\zihao{4}\songti 学\quad\quad 号} & {\zihao{4}\songti \underline{\makebox[120pt]{5120243335}}} \\
+{\zihao{4}\songti 姓\quad\quad 名} & {\zihao{4}\songti \underline{\makebox[120pt]{袁杰强}}} \\
+{\zihao{4}\songti 提交日期} & {\zihao{4}\songti \underline{\makebox[120pt]{2026年6月29日}}} \\
+\end{tabular}
+
+\vfill
+{\zihao{4}\songti \today}
+\end{center}
+\end{titlepage}
+
+% ======================== 目录 ========================
+\newpage
+\tableofcontents
+\thispagestyle{empty}
+\addtocontents{toc}{\protect\thispagestyle{empty}}
+
+% ======================== 正文 ========================
+\newpage
+\setcounter{page}{1}
+
+% ========== 第一章 ==========
+\section{项目代码仓库与版本控制}
+
+\subsection{公开Git仓库链接}
+
+仓库地址：\url{https://github.com/YJQ-123588/home1}
+
+\subsection{提交（Commit）历史}
+
+\begin{longtable}{|c|l|l|}
+\hline
+\textbf{序号} & \textbf{提交信息} & \textbf{提交时间} \\
+\hline
+\endfirsthead
+\hline
+\textbf{序号} & \textbf{提交信息} & \textbf{提交时间} \\
+\hline
+\endhead
+\hline
+\endfoot
+1 & 实践课-西游记-初始1.0 & 2026-06-24 03:29:30 \\
+\hline
+2 & Create README.md & 2026-06-24 06:22:32 \\
+\hline
+3 & Update README.md & 2026-06-24 06:24:15 \\
+\hline
+4 & 西游记2.0 & 2026-06-24 06:37:52 \\
+\hline
+5 & Merge branch 'main' 合并远端仓库更新 & 2026-06-24 06:44:41 \\
+\hline
+6 & main分支同时存在几套项目源码 & 2026-06-24 07:37:38 \\
+\hline
+7 & 新增PythonProject3-pygame,西游记3.0 & 2026-06-25 00:12:45 \\
+\hline
+8 & 仓库同步1.0/2.0/3.0三套源码 & 2026-06-25 01:12:38 \\
+\hline
+9 & 新增PythonProject-pygame3.0 & 2026-06-25 01:45:36 \\
+\hline
+10 & 新增PythonProject-pygame3.1 & 2026-06-25 02:37:57 \\
+\hline
+\end{longtable}
+
+\subsection{版本控制反思}
+
+本次项目采用增量式开发策略，按照功能模块逐步提交：
+
+\begin{enumerate}[label=(\arabic*)]
+    \item \textbf{初始1.0版本}：完成基础游戏框架，包含玩家移动、场景切换等核心功能；
+    \item \textbf{2.0版本}：新增战斗系统、NPC对话、存档功能；
+    \item \textbf{3.0版本}：完善战斗逻辑、增加避战选项、优化地图碰撞；
+    \item \textbf{3.1版本}：修复HP上限bug、完善存档系统、增加状态栏UI。
+\end{enumerate}
+
+每次提交都对应一个完整的功能模块，便于追溯和回滚。遇到Bug时单独提交修复，确保版本稳定性。
+
+% ========== 第二章 ==========
+\section{AI协作能力专项测评}
+
+\subsection{与AI结对编程——调试/功能实现实录}
+
+\subsubsection{问题描述}
+
+在开发战斗系统时，遇到了战斗状态机逻辑混乱的问题。具体表现为：
+
+\begin{enumerate}[label=(\arabic*)]
+    \item 玩家攻击后，怪物反击动画不播放；
+    \item 战斗结束条件判断错误，导致无限循环；
+    \item 大招解锁状态在场景切换后丢失。
+\end{enumerate}
+
+\subsubsection{AI提示词（Prompt）}
+
+\begin{quote}
+\textit{``我在开发一个Pygame RPG游戏的战斗系统，使用有限状态机管理战斗流程。当前问题是：}
+\begin{enumerate}[label=(\arabic*)]
+    \item \textit{STATE\_PLAYER\_ATK状态执行完后，没有正确切换到STATE\_MONSTER\_HURT}
+    \item \textit{战斗结束判断条件有问题，击败怪物后无法正常退出战斗}
+    \item \textit{ultimate\_unlocked变量在场景切换后被重置}
+\end{enumerate}
+\textit{请帮我分析fight\_scene.py中的状态机逻辑，找出问题所在并提供修复方案。''}
+\end{quote}
+
+\subsubsection{AI给出的解决方案}
+
+\begin{enumerate}[label=(\arabic*)]
+    \item 检查状态转换条件，确保每个状态都有明确的next\_state；
+    \item 添加战斗结束标志，在怪物HP$\leq$0时正确设置fight\_over=True；
+    \item 将ultimate\_unlocked状态同步到Game主控类，实现场景间持久化。
+\end{enumerate}
+
+\subsubsection{最终处理方式}
+
+选择 \textbf{B}：理解思路后，手动重写了代码并进行了适配。
+
+\begin{itemize}
+    \item 重新设计了状态机的状态转换表；
+    \item 添加了状态持续时间控制，避免状态跳转过快；
+    \item 将关键状态变量同步到Game类实现持久化。
+\end{itemize}
+
+\textbf{学到的最重要一课}：AI能够快速定位问题并提供解决思路，但需要开发者理解底层逻辑后进行适配，而不是盲目复制代码。
+
+% ========== 第三章 ==========
+\section{架构优化}
+
+\subsection{系统概要类图（优化后）}
+
+\begin{verbatim}
++-------------------------------------------+
+|              Game (主控类)                 |
++-------------------------------------------+
+| - state: int                              |
+| - player_hp: int                          |
+| - player_max_hp: int                      |
+| - player_atk: int                         |
+| - ultimate_unlocked: bool                 |
+| - temple_defeated: list                   |
+| - temple_boss_appeared: bool              |
++-------------------------------------------+
+| + change_state(new_state: int)            |
+| + get_game_state() -> dict                |
+| + save_game(slot: int)                    |
+| + load_game(slot: int)                    |
++-------------------------------------------+
+                    |
+                    | 管理
+                    v
++-------------------------------------------+
+|            Scene (场景基类)                |
++-------------------------------------------+
+| + update(events, dt)                      |
+| + draw(surface)                           |
++-------------------------------------------+
+          |
+    +-----+------+----------+----------+
+    v            v          v          v
++--------+  +--------+  +--------+  +--------+
+| Start  |  |Village |  |Temple  |  | Fight  |
+| Scene  |  | Scene  |  | Scene  |  | Scene  |
++--------+  +--------+  +--------+  +--------+
+                    |
+                    | 包含
+                    v
++-------------------------------------------+
+|           Character (角色类)              |
++-------------------------------------------+
+| - hp: int                                 |
+| - max_hp: int                             |
+| - atk: int                                |
++-------------------------------------------+
+| + take_damage(amount: int)                |
+| + is_alive() -> bool                      |
++-------------------------------------------+
+          |
+    +-----+-----+
+    v            v
++--------+  +--------+
+| Player |  |  NPC   |
+| (悟空) |  | (农民) |
++--------+  +--------+
+\end{verbatim}
+
+\subsection{优化分析}
+
+\subsubsection{优化原因}
+
+\begin{enumerate}[label=(\arabic*)]
+    \item \textbf{单一职责原则}：Game类只负责状态管理，场景类只负责渲染和交互；
+    \item \textbf{组合模式}：场景包含角色，角色包含动画；
+    \item \textbf{场景模板方法}：基类定义流程，子类实现具体逻辑；
+    \item \textbf{状态持久化}：关键数据同步到Game类，实现跨场景保存。
+\end{enumerate}
+
+\subsubsection{采用的设计模式}
+
+\begin{enumerate}[label=(\arabic*)]
+    \item \textbf{单例模式}：Game类作为全局唯一状态管理器；
+    \item \textbf{观察者模式}：状态变化时通知相关组件更新；
+    \item \textbf{状态模式}：战斗系统使用有限状态机管理流程；
+    \item \textbf{模板方法模式}：场景基类定义渲染流程，子类重写具体实现。
+\end{enumerate}
+
+\end{document}

@@ -1,0 +1,12 @@
+{
+  "slot": 1,
+  "timestamp": "2026-06-26 11:23:06",
+  "state": {
+    "current_state": -1,
+    "player_hp": 100,
+    "player_max_hp": 100,
+    "player_atk": 25,
+    "ultimate_unlocked": false,
+    "rescued": false
+  }
+}

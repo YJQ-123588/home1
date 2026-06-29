@@ -1,0 +1,74 @@
+{
+  "slot": 1,
+  "timestamp": "2026-06-28 23:34:28",
+  "state": {
+    "current_state": 0,
+    "player_hp": 115,
+    "player_max_hp": 150,
+    "player_atk": 25,
+    "ultimate_unlocked": true,
+    "rescued": false,
+    "player_x": 2727.0,
+    "player_y": 497.0,
+    "god_talked": false,
+    "god_rescued": false,
+    "elder_states": [
+      {
+        "elder_id": 1,
+        "upgrade_given": false
+      },
+      {
+        "elder_id": 2,
+        "upgrade_given": false
+      },
+      {
+        "elder_id": 3,
+        "upgrade_given": false
+      }
+    ],
+    "farmer_states": [
+      {
+        "farmer_id": 1,
+        "dialog_index": 0
+      },
+      {
+        "farmer_id": 2,
+        "dialog_index": 0
+      },
+      {
+        "farmer_id": 3,
+        "dialog_index": 0
+      }
+    ],
+    "defeated_monsters": [
+      "M3"
+    ],
+    "boss_appeared": false,
+    "monster_hp_list": [
+      {
+        "name": "M1",
+        "hp": 100,
+        "max_hp": 100,
+        "alive": true
+      },
+      {
+        "name": "M2",
+        "hp": 75,
+        "max_hp": 100,
+        "alive": true
+      },
+      {
+        "name": "M3",
+        "hp": 0,
+        "max_hp": 100,
+        "alive": false
+      },
+      {
+        "name": "牛魔王",
+        "hp": 250,
+        "max_hp": 250,
+        "alive": true
+      }
+    ]
+  }
+}
